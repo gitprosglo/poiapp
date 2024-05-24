@@ -194,17 +194,23 @@ const AccountInfo = () => {
           setSubmitedClaims(submitedClaims);
         });
       };
-
-      userInformation2().catch(console.error);
     }
 
-    // if (isAuthenticated &&  (pathname.split('/').pop() || '') !== primaryWallet.address  ) {
-    //     userInformation().catch(console.error);
-    //   }
+    if (
+      isAuthenticated &&
+      (pathname.split('/').pop() || '') !== primaryWallet.address
+    ) {
+      userInformation().catch(console.error);
+    }
   }, [primaryWallet, isAuthenticated]);
 
   useEffect(() => {
     const fetchClaimInformation = async () => {
+      const signer = await getSigner(primaryWallet);
+
+      const provider = await getProvider();
+      const contract = await getContract(signer);
+      console.log('xxxxxxxxxxxxxxxxxxxxxxxx', contract);
       const claimInformationPromises = completedBounties.map(async (bounty) => {
         const uri = await getURI(bounty.claimId);
         const amount = bounty.amount;
